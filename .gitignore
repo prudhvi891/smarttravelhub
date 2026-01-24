@@ -1,0 +1,18 @@
+# node
+node_modules
+
+# env
+.env*
+.vercel
+
+# next
+.next
+out
+build
+
+# sanity
+.sanity
+
+# misc
+.DS_Store
+*.log
