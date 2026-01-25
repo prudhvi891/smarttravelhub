@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 export default function AboutHero() {
   return (
-    <section className="relative h-[50vh] min-h-[420px] overflow-hidden"> 
+    <section className="relative h-[35vh] min-h-[260px] md:h-[45vh] overflow-hidden">
       
       {/* Background Image */}
       <img

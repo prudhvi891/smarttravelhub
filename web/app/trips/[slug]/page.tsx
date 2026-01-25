@@ -30,7 +30,7 @@ export default async function TripDetailPage({
     <>
       {/* HERO / POSTER */}
       {/* <section className="relative h-[70vh] w-full"> */}
-      <section className="relative h-[50vh] min-h-[420px] w-full">
+      <section className="relative h-[35vh] min-h-[260px] md:h-[45vh] w-full">
         {trip.heroImage && (
           <img
             src={urlFor(trip.heroImage).width(2000).quality(85).url()}

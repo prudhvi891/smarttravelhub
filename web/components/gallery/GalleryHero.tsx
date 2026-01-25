@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 export default function GalleryHero() {
   return (
-    <section className="relative h-[50vh] min-h-[320px] overflow-hidden">
+    <section className="relative h-[35vh] min-h-[260px] md:h-[45vh] overflow-hidden">
       {/* BACKGROUND IMAGE (LOCAL) */}
       <img
         src="/images/gallery-hero.jpg"
