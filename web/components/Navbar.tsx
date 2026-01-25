@@ -68,7 +68,10 @@ export default function Navbar({ settings }: any) {
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* LOGO */}
         <button
-          onClick={() => router.push("/")}
+          onClick={() => {
+            setMenuOpen(false); // 👈 important for mobile
+            router.push("/");
+          }}
           className="flex items-center cursor-pointer hover:opacity-90 transition"
         >
           {settings?.siteLogo ? (
@@ -87,7 +90,10 @@ export default function Navbar({ settings }: any) {
         {/* DESKTOP MENU */}
         <ul className="hidden md:flex gap-8 text-sm font-medium text-white">
           <li>
-            <button className={navItemClass} onClick={() => goToSection("tours")}>
+            <button
+              className={navItemClass}
+              onClick={() => goToSection("tours")}
+            >
               Tours
             </button>
           </li>
@@ -143,7 +149,10 @@ export default function Navbar({ settings }: any) {
       >
         <ul className="flex flex-col px-6 py-6 gap-4 text-white text-sm">
           <li>
-            <button className={navItemClass} onClick={() => goToSection("tours")}>
+            <button
+              className={navItemClass}
+              onClick={() => goToSection("tours")}
+            >
               Tours
             </button>
           </li>
