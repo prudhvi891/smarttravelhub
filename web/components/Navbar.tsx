@@ -53,10 +53,37 @@ export default function Navbar({ settings }: any) {
   /* ---------------- SECTION NAVIGATION ---------------- */
   const goToSection = (id: string) => {
     setMenuOpen(false);
-    if (isHome) {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+    if (pathname === "/") {
+      // same page → scroll + manually update hash
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", `#${id}`);
+      }
     } else {
+      // different page → normal navigation
       router.push(`/#${id}`);
+    }
+  };
+
+  const goHome = () => {
+    setMenuOpen(false);
+
+    if (pathname === "/") {
+      // Already on home → scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+
+      // Optional: clean hash if present
+      if (window.location.hash) {
+        window.history.replaceState(null, "", "/");
+      }
+    } else {
+      // Not on home → navigate
+      router.push("/");
     }
   };
 
@@ -68,10 +95,7 @@ export default function Navbar({ settings }: any) {
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* LOGO */}
         <button
-          onClick={() => {
-            setMenuOpen(false); // 👈 important for mobile
-            router.push("/");
-          }}
+          onClick={goHome}
           className="flex items-center cursor-pointer hover:opacity-90 transition"
         >
           {settings?.siteLogo ? (

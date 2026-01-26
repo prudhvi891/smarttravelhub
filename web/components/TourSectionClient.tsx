@@ -1,80 +1,114 @@
-"use client";
+"use client"
 
-import TripCard from "@/components/TripCard";
-import TripsCarousel from "@/components/TripsCarousel";
+import { motion } from "framer-motion"
+import TripCard from "@/components/TripCard"
+import TripsCarousel from "@/components/TripsCarousel"
+import AnimateOnView from "@/components/AnimateOnView"
+import { container, fadeUp } from "@/lib/animations"
 
 export default function ToursSectionClient({
   weekendTrips,
   bulkTrips,
 }: {
-  weekendTrips: any[];
-  bulkTrips: any[];
+  weekendTrips: any[]
+  bulkTrips: any[]
 }) {
   return (
     <section
       id="tours"
-      className="
-        bg-[#F8FAFC]              /* 👈 NEW: soft light background */
-        py-24
-        scroll-mt-24
-      "
+      className="bg-[#F8FAFC] py-24 scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6">
+
         {/* ================= HEADER ================= */}
-        <div className="mb-20 text-center animate-fadeUp">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+        <AnimateOnView
+          variants={container}
+          amount={0.3}
+          className="mb-20 text-center"
+        >
+          <motion.h2
+            variants={fadeUp}
+            className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
+          >
             Our Tours
-          </h2>
-          <p className="text-slate-600 max-w-2xl mx-auto">
+          </motion.h2>
+
+          <motion.p
+            variants={fadeUp}
+            className="text-slate-600 max-w-2xl mx-auto"
+          >
             Carefully curated journeys for weekend explorers and
             large group adventures.
-          </p>
-        </div>
+          </motion.p>
+        </AnimateOnView>
 
         {/* ================= WEEKEND GETAWAYS ================= */}
         {weekendTrips.length > 0 && (
-          <div className="mb-28">
-            <h3 className="text-2xl font-semibold text-slate-900 mb-10">
+          <AnimateOnView
+            variants={container}
+            amount={0.2}
+            className="mb-28"
+          >
+            <motion.h3
+              variants={fadeUp}
+              className="text-2xl font-semibold text-slate-900 mb-10"
+            >
               Weekend Getaways
-            </h3>
+            </motion.h3>
 
             {weekendTrips.length > 3 ? (
               <TripsCarousel trips={weekendTrips} />
             ) : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {weekendTrips.map((trip, index) => (
-                  <TripCard
+              <motion.div
+                variants={container}
+                className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
+                {weekendTrips.map((trip) => (
+                  <motion.div
                     key={trip._id}
-                    trip={trip}
-                  />
+                    variants={fadeUp}
+                  >
+                    <TripCard trip={trip} />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </AnimateOnView>
         )}
 
         {/* ================= BULK TRIPS ================= */}
         {bulkTrips.length > 0 && (
-          <div>
-            <h3 className="text-2xl font-semibold text-slate-900 mb-10">
+          <AnimateOnView
+            variants={container}
+            amount={0.2}
+          >
+            <motion.h3
+              variants={fadeUp}
+              className="text-2xl font-semibold text-slate-900 mb-10"
+            >
               Bulk Trips
-            </h3>
+            </motion.h3>
 
             {bulkTrips.length > 3 ? (
               <TripsCarousel trips={bulkTrips} />
             ) : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {bulkTrips.map((trip, index) => (
-                  <TripCard
+              <motion.div
+                variants={container}
+                className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
+                {bulkTrips.map((trip) => (
+                  <motion.div
                     key={trip._id}
-                    trip={trip}
-                  />
+                    variants={fadeUp}
+                  >
+                    <TripCard trip={trip} />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </AnimateOnView>
         )}
       </div>
     </section>
-  );
+  )
 }
