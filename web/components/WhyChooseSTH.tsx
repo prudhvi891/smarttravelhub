@@ -1,7 +1,6 @@
 "use client"
 
-import { easeOut, motion } from "framer-motion"
-
+import { motion, easeOut } from "framer-motion"
 
 const features = [
   {
@@ -58,12 +57,13 @@ export default function WhyChooseSTH() {
   return (
     <section className="bg-[#F8FAFC] py-24">
       <div className="max-w-7xl mx-auto px-6">
+
         {/* ================= HEADER ================= */}
         <motion.div
           variants={container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-120px" }}
+          viewport={{ once: true }}
           className="text-center mb-20"
         >
           <motion.h2
@@ -86,7 +86,7 @@ export default function WhyChooseSTH() {
           variants={container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-120px" }}
+          viewport={{ once: true }}
           className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {features.map((item, index) => (
@@ -99,7 +99,10 @@ export default function WhyChooseSTH() {
                 rotateY: -2,
                 transition: { duration: 0.25 },
               }}
-              whileTap={{ scale: 0.97 }}
+              whileTap={{
+                scale: 0.97,
+                y: -4,
+              }}
               className="
                 relative
                 bg-white
@@ -121,6 +124,7 @@ export default function WhyChooseSTH() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.15, rotate: 5 }}
+                whileTap={{ scale: 1.1, rotate: 3 }}
                 transition={{ type: "spring", stiffness: 200 }}
                 className="text-4xl mb-4 relative z-10"
               >
