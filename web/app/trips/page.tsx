@@ -2,6 +2,7 @@ import { sanityClient } from "@/lib/sanity.client"
 import { ALL_TRIPS_LISTING_QUERY } from "@/lib/queries"
 import TripCard from "@/components/TripCard"
 
+export const revalidate = 10;
 export default async function TripsPage() {
   const trips = await sanityClient.fetch(ALL_TRIPS_LISTING_QUERY)
 
