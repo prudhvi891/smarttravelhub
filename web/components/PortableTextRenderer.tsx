@@ -1,13 +1,19 @@
-"use client"
+import { PortableText } from "@portabletext/react";
 
-import { PortableText } from "@portabletext/react"
-
-export default function PortableTextRenderer({ value }: { value: any }) {
-  if (!value) return null
-
+export default function PortableTextRenderer({ value }: any) {
   return (
-    <div className="prose prose-invert max-w-none">
-      <PortableText value={value} />
-    </div>
-  )
+    <PortableText
+      value={value}
+      components={{
+        types: {
+          undefined: () => null,
+        },
+        block: {
+          normal: ({ children }) => (
+            <p className="text-slate-700 leading-relaxed mb-4">{children}</p>
+          ),
+        },
+      }}
+    />
+  );
 }

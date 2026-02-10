@@ -110,9 +110,14 @@ export default function Navbar({ settings }: any) {
             </span>
           )}
         </button>
-
         {/* DESKTOP MENU */}
         <ul className="hidden md:flex gap-8 text-sm font-medium text-white">
+          <li>
+            {/* LOGO / HOME BUTTON */}
+            <button onClick={goHome} className={navItemClass}>
+              Home
+            </button>
+          </li>
           <li>
             <button
               className={navItemClass}
@@ -172,6 +177,12 @@ export default function Navbar({ settings }: any) {
         `}
       >
         <ul className="flex flex-col px-6 py-6 gap-4 text-white text-sm">
+          <li>
+            {/* LOGO / HOME BUTTON */}
+            <button onClick={goHome} className={navItemClass}>
+              Home
+            </button>
+          </li>
           <li>
             <button
               className={navItemClass}
