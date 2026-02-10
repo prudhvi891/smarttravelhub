@@ -16,7 +16,7 @@ export default function ToursSectionClient({
   return (
     <section
       id="tours"
-      className="bg-[#F8FAFC] py-24 scroll-mt-24"
+      className="bg-[#F8FAFC] pt-24 pb-10 border-b border-slate-200 scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6">
 
