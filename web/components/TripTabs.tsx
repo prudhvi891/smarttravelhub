@@ -4,12 +4,12 @@ import PortableTextRenderer from "@/components/PortableTextRenderer";
 import { motion, AnimatePresence } from "framer-motion";
 
 const tabs = [
-  {
-    key: "overview",
-    label: "Overview",
-    icon: "📍",
-    gradient: "from-blue-500 to-cyan-500",
-  },
+  // {
+  //   key: "overview",
+  //   label: "Overview",
+  //   icon: "📍",
+  //   gradient: "from-blue-500 to-cyan-500",
+  // },
   {
     key: "itinerary",
     label: "Itinerary",
@@ -370,18 +370,13 @@ function AnimatedItinerary({ trip }: any) {
 }
 
 export default function TripTabs({ trip }: any) {
-  const [active, setActive] = useState("overview");
+  const [active, setActive] = useState("itinerary");
 
   // Debug: Log what's in the trip object (remove in production)
   console.log("Trip data:", trip);
   console.log("Additional Info:", trip.additionalInfo);
 
   const content = {
-    overview: trip.overview ? (
-      <PortableTextRenderer value={trip.overview} />
-    ) : (
-      <p className="text-slate-500 italic">No overview available</p>
-    ),
     itinerary: <AnimatedItinerary trip={trip} />,
     inclusions:
       trip.inclusions && trip.inclusions.length > 0 ? (
@@ -449,7 +444,7 @@ export default function TripTabs({ trip }: any) {
     <>
       {/* ================= DESKTOP TABS ================= */}
       <div className="hidden md:block">
-        <div className="relative mb-8 pb-1">
+        <div className="relative mb-8 ">
           {/* Base underline (always visible) */}
           <div className="absolute bottom-0 left-0 w-full h-[2px] bg-slate-200" />
 
