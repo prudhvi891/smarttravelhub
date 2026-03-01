@@ -2,6 +2,7 @@ import { sanityClient } from "@/lib/sanity.client"
 import { ALL_TRIPS_LISTING_QUERY } from "@/lib/queries"
 import ToursSectionClient from "./TourSectionClient"
 
+export const revalidate = 10;
 export default async function ToursSection() {
   const trips = await sanityClient.fetch(ALL_TRIPS_LISTING_QUERY)
 
