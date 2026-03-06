@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useEffect, useState } from "react";
 import { urlFor } from "@/lib/sanity.image";
 
 export default function Navbar({ settings }: any) {
@@ -20,17 +20,19 @@ export default function Navbar({ settings }: any) {
 
   /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
-    setScrolled(false);
+    setScrolled(window.scrollY > 40);
     setMenuOpen(false);
   }, [pathname]);
 
-  /* ---------------- SCROLL EFFECT ---------------- */
-  useEffect(() => {
+  /* ---------------- SCROLL EFFECT (FIXED) ---------------- */
+  useLayoutEffect(() => {
     if (!(isHome || isContact || isAbout || isGallery || isTripDetail)) return;
 
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
     };
+
+    onScroll(); // ensures correct state before paint
 
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -55,14 +57,12 @@ export default function Navbar({ settings }: any) {
     setMenuOpen(false);
 
     if (pathname === "/") {
-      // same page → scroll + manually update hash
       const el = document.getElementById(id);
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
         window.history.pushState(null, "", `#${id}`);
       }
     } else {
-      // different page → normal navigation
       router.push(`/#${id}`);
     }
   };
@@ -71,18 +71,15 @@ export default function Navbar({ settings }: any) {
     setMenuOpen(false);
 
     if (pathname === "/") {
-      // Already on home → scroll to top
       window.scrollTo({
         top: 0,
         behavior: "smooth",
       });
 
-      // Optional: clean hash if present
       if (window.location.hash) {
         window.history.replaceState(null, "", "/");
       }
     } else {
-      // Not on home → navigate
       router.push("/");
     }
   };
@@ -110,14 +107,15 @@ export default function Navbar({ settings }: any) {
             </span>
           )}
         </button>
+
         {/* DESKTOP MENU */}
         <ul className="hidden md:flex gap-8 text-sm font-medium text-white">
           <li>
-            {/* LOGO / HOME BUTTON */}
             <button onClick={goHome} className={navItemClass}>
               Home
             </button>
           </li>
+
           <li>
             <button
               className={navItemClass}
@@ -126,11 +124,13 @@ export default function Navbar({ settings }: any) {
               Tours
             </button>
           </li>
+
           <li>
             <Link href="/gallery" className={navItemClass}>
               Gallery
             </Link>
           </li>
+
           <li>
             <button
               className={navItemClass}
@@ -139,11 +139,13 @@ export default function Navbar({ settings }: any) {
               Reviews
             </button>
           </li>
+
           <li>
             <Link href="/about" className={navItemClass}>
               About Us
             </Link>
           </li>
+
           <li>
             <Link href="/contact" className={navItemClass}>
               Contact
@@ -155,7 +157,6 @@ export default function Navbar({ settings }: any) {
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
           className="md:hidden text-2xl text-white focus:outline-none"
-          aria-label="Toggle menu"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
@@ -178,11 +179,11 @@ export default function Navbar({ settings }: any) {
       >
         <ul className="flex flex-col px-6 py-6 gap-4 text-white text-sm">
           <li>
-            {/* LOGO / HOME BUTTON */}
             <button onClick={goHome} className={navItemClass}>
               Home
             </button>
           </li>
+
           <li>
             <button
               className={navItemClass}
@@ -191,6 +192,7 @@ export default function Navbar({ settings }: any) {
               Tours
             </button>
           </li>
+
           <li>
             <Link
               href="/gallery"
@@ -200,6 +202,7 @@ export default function Navbar({ settings }: any) {
               Gallery
             </Link>
           </li>
+
           <li>
             <button
               className={navItemClass}
@@ -208,6 +211,7 @@ export default function Navbar({ settings }: any) {
               Reviews
             </button>
           </li>
+
           <li>
             <Link
               href="/about"
@@ -217,6 +221,7 @@ export default function Navbar({ settings }: any) {
               About Us
             </Link>
           </li>
+
           <li>
             <Link
               href="/contact"
