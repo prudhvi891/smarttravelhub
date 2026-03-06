@@ -15,31 +15,32 @@ export default function Navbar({ settings }: any) {
   const isGallery = pathname === "/gallery";
   const isTripDetail = pathname.startsWith("/trips/");
 
-  const [scrolled, setScrolled] = useState(false);
+  // Initialize with correct scroll state to prevent flash
+  const [scrolled, setScrolled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.scrollY > 40;
+    }
+    return false;
+  });
   const [menuOpen, setMenuOpen] = useState(false);
-
-  /* ---------------- INITIAL SCROLL CHECK ON MOUNT ---------------- */
-  useLayoutEffect(() => {
-    // Check scroll position immediately on mount (before paint)
-    setScrolled(window.scrollY > 40);
-  }, []);
 
   /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
     // Check scroll position immediately when route changes
-    setScrolled(window.scrollY > 40);
+    const currentScroll = typeof window !== 'undefined' ? window.scrollY > 40 : false;
+    setScrolled(currentScroll);
     setMenuOpen(false);
   }, [pathname]);
 
   /* ---------------- SCROLL EFFECT ---------------- */
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!(isHome || isContact || isAbout || isGallery || isTripDetail)) return;
 
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
     };
 
-    // Set initial state
+    // Set initial state immediately
     onScroll();
 
     // Add passive listener for better performance
