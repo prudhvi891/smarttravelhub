@@ -15,73 +15,31 @@ export default function Navbar({ settings }: any) {
   const isGallery = pathname === "/gallery";
   const isTripDetail = pathname.startsWith("/trips/");
 
-  // Should blend on these pages
+  // Should have transparent/blend behavior
   const shouldBlend = isHome || isContact || isAbout || isGallery || isTripDetail;
 
-  // Initialize with correct scroll state
-  const [scrolled, setScrolled] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.scrollY > 40;
-    }
-    return false;
-  });
-  
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Set mounted flag
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  /* ---------------- RESET ON ROUTE CHANGE ---------------- */
-  useEffect(() => {
-    setScrolled(window.scrollY > 40);
-    setMenuOpen(false);
-  }, [pathname]);
 
   /* ---------------- SCROLL EFFECT ---------------- */
   useEffect(() => {
-    if (!shouldBlend) return;
-
-    const onScroll = () => {
-      const isScrolled = window.scrollY > 40;
-      setScrolled(isScrolled);
+    // Always check scroll on mount/route change
+    const checkScroll = () => {
+      setScrolled(window.scrollY > 40);
     };
 
-    // Set initial state
-    onScroll();
+    checkScroll(); // Initial check
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [shouldBlend]);
-
-  /* ---------------- NAVBAR STYLE ---------------- */
-  // Default to blended style on pages that should blend, then switch based on scroll
-  const getNavbarClass = () => {
-    if (!mounted) {
-      // On server/initial render, default to blended for blend pages
-      if (shouldBlend) {
-        return "bg-gradient-to-b from-black/60 to-transparent";
-      }
-      return "bg-[#0B0F14] border-b border-white/10";
-    }
-
-    // After mount, use scroll state
     if (shouldBlend) {
-      return scrolled
-        ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10"
-        : "bg-gradient-to-b from-black/60 to-transparent";
+      window.addEventListener("scroll", checkScroll, { passive: true });
+      return () => window.removeEventListener("scroll", checkScroll);
     }
-    
-    return "bg-[#0B0F14] border-b border-white/10";
-  };
+  }, [shouldBlend, pathname]);
 
-  const navItemClass =
-    "relative cursor-pointer text-white/80 hover:text-white transition " +
-    "after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-0 " +
-    "after:bg-white/40 after:transition-all after:duration-300 " +
-    "hover:after:w-full";
+  /* ---------------- RESET MENU ON ROUTE CHANGE ---------------- */
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   /* ---------------- SECTION NAVIGATION ---------------- */
   const goToSection = (id: string) => {
@@ -115,9 +73,21 @@ export default function Navbar({ settings }: any) {
     }
   };
 
+  /* ---------------- NAVBAR CLASSES ---------------- */
+  const navItemClass =
+    "relative cursor-pointer text-white/80 hover:text-white transition " +
+    "after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-0 " +
+    "after:bg-white/40 after:transition-all after:duration-300 " +
+    "hover:after:w-full";
+
   return (
     <header
-      className={`fixed top-0 z-[100] w-full transition-all duration-500 ease-out ${getNavbarClass()}`}
+      className={`
+        fixed top-0 z-[100] w-full transition-all duration-500 ease-out
+        ${!shouldBlend ? "bg-[#0B0F14] border-b border-white/10" : ""}
+        ${shouldBlend && scrolled ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10" : ""}
+        ${shouldBlend && !scrolled ? "bg-gradient-to-b from-black/60 to-transparent" : ""}
+      `}
     >
       {/* ================= DESKTOP / TOP BAR ================= */}
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
