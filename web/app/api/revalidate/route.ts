@@ -1,40 +1,37 @@
 import { revalidatePath } from "next/cache";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const body = await req.json();
-
-  // Security check
-  if (body.secret !== process.env.SANITY_REVALIDATE_SECRET) {
-    return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
-  }
-
-  const type = body._type;
-  const slug = body.slug?.current;
-
+export async function POST(req: NextRequest) {
   try {
-    // ===== Trips =====
-    if (type === "trip") {
-      revalidatePath("/trips", "page");
-      if (slug) revalidatePath(`/trips/${slug}`, "page");
-      revalidatePath("/", "page"); // if trips appear on homepage
+    const body = await req.json();
+
+    const slug = body?.slug;
+
+    if (!slug) {
+      return NextResponse.json(
+        { message: "No slug provided" },
+        { status: 400 }
+      );
     }
 
-    // ===== Blog (future example) =====
-    if (type === "post") {
-      revalidatePath("/blog", "page");
-      if (slug) revalidatePath(`/blog/${slug}`, "page");
-    }
+    // Revalidate specific trip page
+    revalidatePath(`/trips/${slug}`);
 
-    // ===== Global Settings =====
-    if (type === "siteSettings") {
-      revalidatePath("/", "page");
-    }
+    // Revalidate trips listing page
+    revalidatePath("/trips");
 
-    return NextResponse.json({ revalidated: true });
-  } catch (err) {
+    // Revalidate homepage (if trips appear there)
+    revalidatePath("/");
+
+    return NextResponse.json({
+      revalidated: true,
+      slug,
+      time: new Date().toISOString(),
+    });
+
+  } catch (error) {
     return NextResponse.json(
-      { message: "Revalidation failed" },
+      { message: "Revalidation failed", error },
       { status: 500 }
     );
   }
