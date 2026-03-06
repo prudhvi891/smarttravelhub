@@ -109,7 +109,7 @@ export default function ReviewsSection() {
         {/* READ MORE LINK */}
         <div className="mt-14 text-center">
           <a
-            href="https://www.google.com/maps/place/?q=Smart+Travel+Hub+reviews"
+            href="https://share.google/l5zuhmVJSmfOdDh4n"
             target="_blank"
             rel="noopener noreferrer"
             className="
