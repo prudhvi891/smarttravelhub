@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useLayoutEffect, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { urlFor } from "@/lib/sanity.image";
 
 export default function Navbar({ settings }: any) {
@@ -15,46 +15,67 @@ export default function Navbar({ settings }: any) {
   const isGallery = pathname === "/gallery";
   const isTripDetail = pathname.startsWith("/trips/");
 
-  // Initialize with correct scroll state to prevent flash
+  // Should blend on these pages
+  const shouldBlend = isHome || isContact || isAbout || isGallery || isTripDetail;
+
+  // Initialize with correct scroll state
   const [scrolled, setScrolled] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.scrollY > 40;
     }
     return false;
   });
+  
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted flag
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
-    // Check scroll position immediately when route changes
-    const currentScroll = typeof window !== 'undefined' ? window.scrollY > 40 : false;
-    setScrolled(currentScroll);
+    setScrolled(window.scrollY > 40);
     setMenuOpen(false);
   }, [pathname]);
 
   /* ---------------- SCROLL EFFECT ---------------- */
   useEffect(() => {
-    if (!(isHome || isContact || isAbout || isGallery || isTripDetail)) return;
+    if (!shouldBlend) return;
 
     const onScroll = () => {
-      setScrolled(window.scrollY > 40);
+      const isScrolled = window.scrollY > 40;
+      setScrolled(isScrolled);
     };
 
-    // Set initial state immediately
+    // Set initial state
     onScroll();
 
-    // Add passive listener for better performance
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isHome, isContact, isAbout, isGallery, isTripDetail]);
+  }, [shouldBlend]);
 
   /* ---------------- NAVBAR STYLE ---------------- */
-  const navbarClass =
-    isHome || isContact || isAbout || isGallery || isTripDetail
-      ? scrolled
+  // Default to blended style on pages that should blend, then switch based on scroll
+  const getNavbarClass = () => {
+    if (!mounted) {
+      // On server/initial render, default to blended for blend pages
+      if (shouldBlend) {
+        return "bg-gradient-to-b from-black/60 to-transparent";
+      }
+      return "bg-[#0B0F14] border-b border-white/10";
+    }
+
+    // After mount, use scroll state
+    if (shouldBlend) {
+      return scrolled
         ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10"
-        : "bg-gradient-to-b from-black/60 to-transparent"
-      : "bg-[#0B0F14] border-b border-white/10";
+        : "bg-gradient-to-b from-black/60 to-transparent";
+    }
+    
+    return "bg-[#0B0F14] border-b border-white/10";
+  };
 
   const navItemClass =
     "relative cursor-pointer text-white/80 hover:text-white transition " +
@@ -96,7 +117,7 @@ export default function Navbar({ settings }: any) {
 
   return (
     <header
-      className={`fixed top-0 z-[100] w-full transition-all duration-500 ease-out ${navbarClass}`}
+      className={`fixed top-0 z-[100] w-full transition-all duration-500 ease-out ${getNavbarClass()}`}
     >
       {/* ================= DESKTOP / TOP BAR ================= */}
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
