@@ -18,13 +18,20 @@ export default function Navbar({ settings }: any) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  /* ---------------- INITIAL SCROLL CHECK ON MOUNT ---------------- */
+  useLayoutEffect(() => {
+    // Check scroll position immediately on mount (before paint)
+    setScrolled(window.scrollY > 40);
+  }, []);
+
   /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
+    // Check scroll position immediately when route changes
     setScrolled(window.scrollY > 40);
     setMenuOpen(false);
   }, [pathname]);
 
-  /* ---------------- SCROLL EFFECT (FIXED) ---------------- */
+  /* ---------------- SCROLL EFFECT ---------------- */
   useLayoutEffect(() => {
     if (!(isHome || isContact || isAbout || isGallery || isTripDetail)) return;
 
@@ -32,9 +39,11 @@ export default function Navbar({ settings }: any) {
       setScrolled(window.scrollY > 40);
     };
 
-    onScroll(); // ensures correct state before paint
+    // Set initial state
+    onScroll();
 
-    window.addEventListener("scroll", onScroll);
+    // Add passive listener for better performance
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome, isContact, isAbout, isGallery, isTripDetail]);
 
