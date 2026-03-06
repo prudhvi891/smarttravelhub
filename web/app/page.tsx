@@ -8,7 +8,9 @@ import { SITE_SETTINGS_QUERY } from "@/lib/queries"
 import { sanityClient } from "@/lib/sanity.client"
 import { Suspense } from "react"
 
+export const revalidate = 60;
 export default async function HomePage() {
+  
   const settings = await sanityClient.fetch(SITE_SETTINGS_QUERY)
   
   return (

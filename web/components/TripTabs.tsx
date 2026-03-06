@@ -4,12 +4,6 @@ import PortableTextRenderer from "@/components/PortableTextRenderer";
 import { motion, AnimatePresence } from "framer-motion";
 
 const tabs = [
-  // {
-  //   key: "overview",
-  //   label: "Overview",
-  //   icon: "📍",
-  //   gradient: "from-blue-500 to-cyan-500",
-  // },
   {
     key: "itinerary",
     label: "Itinerary",
@@ -36,7 +30,7 @@ const tabs = [
   },
 ];
 
-// Universal Itinerary Parser - Works for ANY destination
+// IMPROVED Universal Itinerary Parser
 function parseItinerary(text: string) {
   if (!text) return [];
 
@@ -51,67 +45,63 @@ function parseItinerary(text: string) {
     // Skip empty lines
     if (!trimmed) return;
 
-    // Detect DAY headers - supports multiple formats:
-    // "🗓️ Day 1:", "Day 1:", "DAY 1 -", "Day 1 |", etc.
+    // Detect DAY headers - IMPROVED to handle various formats:
+    // "🗓️ DAY 1 –", "Day 1:", "🌄 Day 1:", "DAY 1 - TITLE 🚍"
     const dayMatch = trimmed.match(
-      /(?:🗓️\s*)?(?:Day|DAY)\s*(\d+)\s*[:\-|]\s*(.+)/i
+      /(?:🗓️|🌄|🌲|🏔️|📅)?\s*(?:Day|DAY)\s*(\d+)\s*[:\-–|]\s*(.+?)(?:\s*[🚍🏔️❤️❄️🔥⛰️🌊🏕️])?$/i
     );
+    
     if (dayMatch) {
       if (currentDay) days.push(currentDay);
+      
+      // Clean up the title - remove trailing emojis
+      let title = dayMatch[2].trim();
+      title = title.replace(/[🚍🏔️❤️❄️🔥⛰️🌊🏕️]+$/g, '').trim();
+      
       currentDay = {
         number: dayMatch[1],
-        title: dayMatch[2].trim(),
+        title: title,
         sections: [],
       };
       currentSection = null;
       return;
     }
 
-    // Skip common header/footer lines (customize if needed)
+    // Skip common header/footer lines - IMPROVED
     if (
-      trimmed.match(/^[*#\-=]{3,}/) || // Decorative lines
-      (trimmed.match(/PRESENTS|Package|Trip|Tour|Travel/i) &&
-        trimmed.length < 50) || // Title lines
-      trimmed.match(/^\d+\s*(Days?|Nights?)\s*\/\s*\d+\s*(Days?|Nights?)/) || // "3 Days / 2 Nights"
-      (trimmed.match(/^(Pickup|Drop).*:/) && trimmed.length < 100) // Pickup/Drop info lines
+      trimmed.match(/^[*#\-=❄️✨🌿]{2,}/) || // Decorative lines
+      trimmed.match(/SMART TRAVEL HUB|PRESENTS/i) || // Company name
+      trimmed.match(/Package Price|Duration|Itinerary \(Tentative\)/i) || // Package info
+      trimmed.match(/^💰|^📆|^🗺️|^📅/) || // Info emojis
+      (trimmed.match(/^[❄️🌿✨]+\s*[A-Z]/) && trimmed.length < 60) // Decorative titles
     ) {
       return;
     }
 
     if (!currentDay) return; // Skip lines before first day
 
-    // Detect SECTION headers - multi-language and format support
-    const sectionPatterns = [
-      /Activities/i,
-      /Sightseeing/i,
-      /Tour/i,
-      /Visit/i,
-      /Included/i,
-      /Optional/i,
-      /Meals?/i,
-      /Stay/i,
-      /Accommodation/i,
-      /Check-?in/i,
-      /Departure/i,
-      /Arrival/i,
-      /Transfer/i,
-    ];
+    // Check if line starts with emoji
+    const emojiMatch = trimmed.match(/^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/u);
+    
+    if (emojiMatch) {
+      const emoji = emojiMatch[0];
+      const restOfLine = trimmed.replace(/^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)\s*/u, "").trim();
 
-    const hasEmoji = trimmed.match(
-      /^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/u
-    );
+      // Determine if this is a SECTION HEADER
+      // Section headers are typically:
+      // 1. Longer lines (> 25 chars) starting with specific emojis
+      // 2. Starting with action words like "Reach", "Visit", "Places to Explore"
+      
+      const sectionHeaderEmojis = ['📍', '🍳', '🚗', '🌙', '🏨', '🍽️', '⏰'];
+      const isLikelySectionHeader = 
+        sectionHeaderEmojis.includes(emoji) && 
+        restOfLine.length > 25 &&
+        (
+          restOfLine.match(/^(Reach|Places to|Visit|Explore|Adventure|Evening|Morning|Afternoon|Return|Kullu|Kasol)/i) ||
+          restOfLine.includes(':')
+        );
 
-    if (hasEmoji) {
-      const restOfLine = trimmed
-        .replace(/^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)\s*/u, "")
-        .trim();
-
-      // Check if this is a section header
-      const isSectionHeader =
-        sectionPatterns.some((pattern) => pattern.test(restOfLine)) ||
-        restOfLine.split(" ").length > 4; // Long text likely a header
-
-      if (isSectionHeader) {
+      if (isLikelySectionHeader) {
         currentSection = {
           title: trimmed,
           items: [],
@@ -121,21 +111,8 @@ function parseItinerary(text: string) {
       }
     }
 
-    // Detect "Option 1", "Option A", "Choice 1" etc.
-    const optionMatch = trimmed.match(
-      /^(?:Option|Choice)\s*([A-Z\d]+)\s*[:\-]\s*(.+)/i
-    );
-    if (optionMatch) {
-      currentSection = {
-        title: trimmed,
-        items: [],
-      };
-      currentDay.sections.push(currentSection);
-      return;
-    }
-
     // Everything else with emoji = activity item
-    if (hasEmoji) {
+    if (emojiMatch) {
       if (!currentSection) {
         // Create default section if none exists
         currentSection = { title: "", items: [] };
@@ -145,7 +122,7 @@ function parseItinerary(text: string) {
     }
     // Lines without emoji but under a section
     else if (currentSection && trimmed.length > 0) {
-      // Add as plain text item (will be prefixed with a default emoji)
+      // Add as plain text item
       currentSection.items.push("📌 " + trimmed);
     }
   });
@@ -372,10 +349,6 @@ function AnimatedItinerary({ trip }: any) {
 export default function TripTabs({ trip }: any) {
   const [active, setActive] = useState("itinerary");
 
-  // Debug: Log what's in the trip object (remove in production)
-  console.log("Trip data:", trip);
-  console.log("Additional Info:", trip.additionalInfo);
-
   const content = {
     itinerary: <AnimatedItinerary trip={trip} />,
     inclusions:
@@ -431,13 +404,12 @@ export default function TripTabs({ trip }: any) {
         <p className="text-slate-500 italic">No exclusions listed</p>
       ),
     additionalInfo: trip.additionalInfo ? (
-  <p className="text-slate-700 leading-relaxed whitespace-pre-line">
-    {trip.additionalInfo}
-  </p>
-) : (
-  <p className="text-slate-500 italic">No additional information available</p>
-),
-
+      <p className="text-slate-700 leading-relaxed whitespace-pre-line">
+        {trip.additionalInfo}
+      </p>
+    ) : (
+      <p className="text-slate-500 italic">No additional information available</p>
+    ),
   };
 
   return (

@@ -4,7 +4,7 @@ import { urlFor } from "@/lib/sanity.image";
 import { notFound } from "next/navigation";
 import TripTabs from "@/components/TripTabs";
 
-export const revalidate = 10;
+export const revalidate = 60;
 export default async function TripDetailPage({
   params,
 }: {

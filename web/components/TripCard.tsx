@@ -28,7 +28,7 @@ export default function TripCard({ trip }: TripCardProps) {
         "
     >
       {/* IMAGE */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative w-full aspect-[1.91/1] overflow-hidden">
         {trip.heroImage && (
           <img
             src={urlFor(trip.heroImage).width(600).height(360).url()}
