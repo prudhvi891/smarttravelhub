@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function AnimatedHero() {
   const { scrollY } = useScroll();
@@ -9,21 +9,6 @@ export default function AnimatedHero() {
   
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-
-  // Generate random positions only on client
-  const [particles, setParticles] = useState<Array<{ x: number; y: number; duration: number }>>([]);
-
-  useEffect(() => {
-    setMounted(true);
-    // Generate particle positions on client only
-    setParticles(
-      Array.from({ length: 12 }, () => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        duration: Math.random() * 20 + 20,
-      }))
-    );
-  }, []);
 
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black">
@@ -46,33 +31,6 @@ export default function AnimatedHero() {
       {/* ATMOSPHERIC OVERLAY */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
       
-      {/* ENHANCED FLOATING CLOUDS/MIST EFFECT */}
-      {mounted && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-[200%] h-full"
-              initial={{ x: i % 2 === 0 ? "-100%" : "100%", opacity: 0 }}
-              animate={{ 
-                x: i % 2 === 0 ? "100%" : "-100%",
-                opacity: [0, 0.12, 0.12, 0]
-              }}
-              transition={{
-                duration: 40 + i * 15,
-                repeat: Infinity,
-                delay: i * 8,
-                ease: "linear"
-              }}
-              style={{
-                background: `radial-gradient(ellipse ${i % 2 === 0 ? '60% 50%' : '50% 60%'} at ${30 + i * 15}% 50%, rgba(255,255,255,0.15) 0%, transparent 60%)`,
-                top: `${15 + i * 20}%`,
-                filter: 'blur(40px)',
-              }}
-            />
-          ))}
-        </div>
-      )}
 
       {/* CONTENT */}
       <motion.div
@@ -131,62 +89,6 @@ export default function AnimatedHero() {
               transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
             />
           </div>
-        </motion.div>
-
-        {/* PREMIUM FLOATING ORNAMENT - Top Left */}
-        <motion.div
-          initial={{ opacity: 0, x: -30, y: -30 }}
-          animate={{ opacity: 0.4, x: 0, y: 0 }}
-          transition={{ duration: 1.5, delay: 0.3 }}
-          className="absolute top-0 left-0 hidden md:block"
-        >
-          <motion.div
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ 
-              rotate: { duration: 30, repeat: Infinity, ease: "linear" },
-              scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-            }}
-            className="w-20 h-20 relative"
-          >
-            {/* Geometric ornament */}
-            <svg viewBox="0 0 100 100" className="w-full h-full text-white/20">
-              <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <circle cx="50" cy="50" r="20" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <path d="M50,10 L50,90 M10,50 L90,50 M25,25 L75,75 M75,25 L25,75" stroke="currentColor" strokeWidth="0.3"/>
-              <circle cx="50" cy="50" r="3" fill="currentColor"/>
-            </svg>
-          </motion.div>
-        </motion.div>
-
-        {/* PREMIUM FLOATING ORNAMENT - Top Right */}
-        <motion.div
-          initial={{ opacity: 0, x: 30, y: -30 }}
-          animate={{ opacity: 0.4, x: 0, y: 0 }}
-          transition={{ duration: 1.5, delay: 0.5 }}
-          className="absolute top-0 right-0 hidden md:block"
-        >
-          <motion.div
-            animate={{ 
-              rotate: [360, 0],
-              scale: [1, 1.15, 1]
-            }}
-            transition={{ 
-              rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-              scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-            }}
-            className="w-16 h-16 relative"
-          >
-            {/* Diamond ornament */}
-            <svg viewBox="0 0 100 100" className="w-full h-full text-white/20">
-              <path d="M50,10 L90,50 L50,90 L10,50 Z" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <path d="M50,30 L70,50 L50,70 L30,50 Z" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <circle cx="50" cy="50" r="2" fill="currentColor"/>
-            </svg>
-          </motion.div>
         </motion.div>
 
         {/* LIGHTER, ELEGANT HEADING */}
@@ -306,45 +208,6 @@ export default function AnimatedHero() {
           </div>
         </motion.div>
       </motion.div>
-
-      {/* SUBTLE CORNER ACCENTS */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.06 }}
-        transition={{ duration: 2 }}
-        className="absolute top-8 md:top-14 left-8 md:left-14 w-16 h-16 md:w-24 md:h-24 border-l border-t border-white"
-      />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.06 }}
-        transition={{ duration: 2, delay: 0.2 }}
-        className="absolute bottom-8 md:bottom-14 right-8 md:right-14 w-16 h-16 md:w-24 md:h-24 border-r border-b border-white"
-      />
-
-      {/* FLOATING PARTICLES */}
-      {mounted && particles.length > 0 && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {particles.map((particle, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white/20 rounded-full"
-              initial={{
-                x: `${particle.x}%`,
-                y: `${particle.y}%`,
-              }}
-              animate={{
-                y: [`${particle.y}%`, `${(particle.y + 50) % 100}%`],
-                opacity: [0.1, 0.3, 0.1],
-              }}
-              transition={{
-                duration: particle.duration,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          ))}
-        </div>
-      )}
     </section>
   );
 }
