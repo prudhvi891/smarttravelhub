@@ -5,8 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { urlFor } from "@/lib/sanity.image";
 
-export default function Navbar({ settings }: any) {
-  const pathname = usePathname();
+type NavbarProps = {
+  settings?: any;
+};
+
+export default function Navbar({ settings }: NavbarProps) {
+  const pathname = usePathname() || "";
   const router = useRouter();
 
   const isHome = pathname === "/";
@@ -16,43 +20,34 @@ export default function Navbar({ settings }: any) {
   const isTripDetail = pathname.startsWith("/trips/");
 
   // Should have transparent/blend behavior
-  const shouldBlend = isHome || isContact || isAbout || isGallery || isTripDetail;
+  const shouldBlend =
+    isHome || isContact || isAbout || isGallery || isTripDetail;
 
-  // CRITICAL: Start with false to match server-side render
-  // Then update immediately on client
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Set mounted flag immediately
-  useEffect(() => {
-    setMounted(true);
-    // Check scroll position immediately when component mounts
-    setScrolled(window.scrollY > 40);
-  }, []);
 
   /* ---------------- SCROLL EFFECT ---------------- */
   useEffect(() => {
-    if (!shouldBlend || !mounted) return;
+    if (!shouldBlend) return;
 
     const checkScroll = () => {
       setScrolled(window.scrollY > 40);
     };
 
-    // Check immediately
+    // Run immediately
     checkScroll();
 
     window.addEventListener("scroll", checkScroll, { passive: true });
     return () => window.removeEventListener("scroll", checkScroll);
-  }, [shouldBlend, mounted]);
+  }, [shouldBlend]);
 
   /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
-    if (mounted) {
+    if (shouldBlend) {
       setScrolled(window.scrollY > 40);
     }
     setMenuOpen(false);
-  }, [pathname, mounted]);
+  }, [pathname, shouldBlend]);
 
   /* ---------------- SECTION NAVIGATION ---------------- */
   const goToSection = (id: string) => {
@@ -98,11 +93,19 @@ export default function Navbar({ settings }: any) {
       className={`
         fixed top-0 z-[100] w-full transition-all duration-500 ease-out
         ${!shouldBlend ? "bg-[#0B0F14] border-b border-white/10" : ""}
-        ${shouldBlend && scrolled ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10" : ""}
-        ${shouldBlend && !scrolled ? "bg-gradient-to-b from-black/60 to-transparent" : ""}
+        ${
+          shouldBlend && scrolled
+            ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10"
+            : ""
+        }
+        ${
+          shouldBlend && !scrolled
+            ? "bg-gradient-to-b from-black/60 to-transparent"
+            : ""
+        }
       `}
     >
-      {/* ================= DESKTOP / TOP BAR ================= */}
+      {/* ================= DESKTOP NAV ================= */}
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* LOGO */}
         <button
@@ -167,7 +170,7 @@ export default function Navbar({ settings }: any) {
           </li>
         </ul>
 
-        {/* HAMBURGER */}
+        {/* MOBILE HAMBURGER */}
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
           className="md:hidden text-2xl text-white focus:outline-none"
@@ -179,8 +182,7 @@ export default function Navbar({ settings }: any) {
       {/* ================= MOBILE MENU ================= */}
       <div
         className={`
-          md:hidden
-          absolute top-full left-0 w-full
+          md:hidden absolute top-full left-0 w-full
           bg-[#0B0F14]/95 backdrop-blur
           border-t border-white/10
           transition-all duration-300
