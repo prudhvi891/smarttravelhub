@@ -34,10 +34,14 @@ export default function Navbar({ settings }: NavbarProps) {
       setScrolled(window.scrollY > 40);
     };
 
-    // Run immediately
+    // run immediately
     checkScroll();
 
+    // run again after layout paint (fixes hero + navbar timing)
+    requestAnimationFrame(checkScroll);
+
     window.addEventListener("scroll", checkScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", checkScroll);
   }, [shouldBlend]);
 
