@@ -18,36 +18,41 @@ export default function Navbar({ settings }: any) {
   // Should have transparent/blend behavior
   const shouldBlend = isHome || isContact || isAbout || isGallery || isTripDetail;
 
-  // Initialize with ACTUAL scroll position, not false
-  const [scrolled, setScrolled] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.scrollY > 40;
-    }
-    return false;
-  });
-  
+  // CRITICAL: Start with false to match server-side render
+  // Then update immediately on client
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted flag immediately
+  useEffect(() => {
+    setMounted(true);
+    // Check scroll position immediately when component mounts
+    setScrolled(window.scrollY > 40);
+  }, []);
 
   /* ---------------- SCROLL EFFECT ---------------- */
   useEffect(() => {
-    // Check scroll immediately on mount
-    setScrolled(window.scrollY > 40);
-
-    if (!shouldBlend) return;
+    if (!shouldBlend || !mounted) return;
 
     const checkScroll = () => {
       setScrolled(window.scrollY > 40);
     };
 
+    // Check immediately
+    checkScroll();
+
     window.addEventListener("scroll", checkScroll, { passive: true });
     return () => window.removeEventListener("scroll", checkScroll);
-  }, [shouldBlend]);
+  }, [shouldBlend, mounted]);
 
   /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
-    setScrolled(window.scrollY > 40);
+    if (mounted) {
+      setScrolled(window.scrollY > 40);
+    }
     setMenuOpen(false);
-  }, [pathname]);
+  }, [pathname, mounted]);
 
   /* ---------------- SECTION NAVIGATION ---------------- */
   const goToSection = (id: string) => {
