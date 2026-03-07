@@ -172,7 +172,7 @@ export default function AnimatedHero() {
         {/* LIGHTER, ELEGANT HEADING */}
         <div className="text-center mb-8 md:mb-12">
           <div className="mb-8 md:mb-12">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white leading-[1.1] tracking-tight">
+            <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl font-light text-white leading-[1.1] tracking-tight">
               {["Journey", "Beyond", "Boundaries"].map((word, i) => (
                 <div key={i} className="inline-block overflow-hidden mr-3 md:mr-4">
                   <motion.span
@@ -203,12 +203,15 @@ export default function AnimatedHero() {
             </h1>
           </div>
 
-          {/* REFINED SUBTITLE */}
+          {/* REFINED SUBTITLE - INCREASED OPACITY */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className="text-sm md:text-base text-white/60 font-light leading-relaxed max-w-2xl mx-auto mb-10 md:mb-14 tracking-wide"
+            className="text-base md:text-lg text-white/85 font-light leading-relaxed max-w-2xl mx-auto mb-10 md:mb-14 tracking-wide"
+            style={{
+              textShadow: "0 2px 20px rgba(0,0,0,0.4)"
+            }}
           >
             From sacred temples to mountain peaks, we craft experiences that become stories.
           </motion.p>
