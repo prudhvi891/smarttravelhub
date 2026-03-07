@@ -12,7 +12,7 @@ export default function AnimatedHero() {
         transition={{ duration: 8, ease: "easeOut" }}
         className="absolute inset-0 bg-center bg-cover"
         style={{
-          backgroundImage: "url('/images/hero.jpg')",
+          backgroundImage: "url('/images/hero.png')",
         }}
       />
 
