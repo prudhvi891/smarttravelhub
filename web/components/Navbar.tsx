@@ -18,26 +18,34 @@ export default function Navbar({ settings }: any) {
   // Should have transparent/blend behavior
   const shouldBlend = isHome || isContact || isAbout || isGallery || isTripDetail;
 
-  const [scrolled, setScrolled] = useState(false);
+  // Initialize with ACTUAL scroll position, not false
+  const [scrolled, setScrolled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.scrollY > 40;
+    }
+    return false;
+  });
+  
   const [menuOpen, setMenuOpen] = useState(false);
 
   /* ---------------- SCROLL EFFECT ---------------- */
   useEffect(() => {
-    // Always check scroll on mount/route change
+    // Check scroll immediately on mount
+    setScrolled(window.scrollY > 40);
+
+    if (!shouldBlend) return;
+
     const checkScroll = () => {
       setScrolled(window.scrollY > 40);
     };
 
-    checkScroll(); // Initial check
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    return () => window.removeEventListener("scroll", checkScroll);
+  }, [shouldBlend]);
 
-    if (shouldBlend) {
-      window.addEventListener("scroll", checkScroll, { passive: true });
-      return () => window.removeEventListener("scroll", checkScroll);
-    }
-  }, [shouldBlend, pathname]);
-
-  /* ---------------- RESET MENU ON ROUTE CHANGE ---------------- */
+  /* ---------------- RESET ON ROUTE CHANGE ---------------- */
   useEffect(() => {
+    setScrolled(window.scrollY > 40);
     setMenuOpen(false);
   }, [pathname]);
 
