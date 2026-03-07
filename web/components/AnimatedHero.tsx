@@ -1,12 +1,29 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export default function AnimatedHero() {
   const { scrollY } = useScroll();
+  const [mounted, setMounted] = useState(false);
   
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  // Generate random positions only on client
+  const [particles, setParticles] = useState<Array<{ x: number; y: number; duration: number }>>([]);
+
+  useEffect(() => {
+    setMounted(true);
+    // Generate particle positions on client only
+    setParticles(
+      Array.from({ length: 12 }, () => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        duration: Math.random() * 20 + 20,
+      }))
+    );
+  }, []);
 
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black">
@@ -29,30 +46,33 @@ export default function AnimatedHero() {
       {/* ATMOSPHERIC OVERLAY */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
       
-      {/* FLOATING CLOUDS/MIST EFFECT */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-full h-full"
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ 
-              x: ["100%", "-100%"],
-              opacity: [0, 0.15, 0.15, 0]
-            }}
-            transition={{
-              duration: 30 + i * 10,
-              repeat: Infinity,
-              delay: i * 10,
-              ease: "linear"
-            }}
-            style={{
-              background: `radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 70%)`,
-              top: `${20 + i * 25}%`,
-            }}
-          />
-        ))}
-      </div>
+      {/* ENHANCED FLOATING CLOUDS/MIST EFFECT */}
+      {mounted && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(4)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-[200%] h-full"
+              initial={{ x: i % 2 === 0 ? "-100%" : "100%", opacity: 0 }}
+              animate={{ 
+                x: i % 2 === 0 ? "100%" : "-100%",
+                opacity: [0, 0.12, 0.12, 0]
+              }}
+              transition={{
+                duration: 40 + i * 15,
+                repeat: Infinity,
+                delay: i * 8,
+                ease: "linear"
+              }}
+              style={{
+                background: `radial-gradient(ellipse ${i % 2 === 0 ? '60% 50%' : '50% 60%'} at ${30 + i * 15}% 50%, rgba(255,255,255,0.15) 0%, transparent 60%)`,
+                top: `${15 + i * 20}%`,
+                filter: 'blur(40px)',
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* CONTENT */}
       <motion.div
@@ -173,7 +193,7 @@ export default function AnimatedHero() {
         <div className="text-center mb-8 md:mb-12">
           <div className="mb-8 md:mb-12">
             <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl font-light text-white leading-[1.1] tracking-tight">
-              {["Journey", "Beyond", "Boundaries"].map((word, i) => (
+              {["Explore", "The", "World", "Smarter"].map((word, i) => (
                 <div key={i} className="inline-block overflow-hidden mr-3 md:mr-4">
                   <motion.span
                     initial={{ 
@@ -302,27 +322,29 @@ export default function AnimatedHero() {
       />
 
       {/* FLOATING PARTICLES */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
-            initial={{
-              x: `${Math.random() * 100}%`,
-              y: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [`${Math.random() * 100}%`, `${Math.random() * 100}%`],
-              opacity: [0.1, 0.3, 0.1],
-            }}
-            transition={{
-              duration: Math.random() * 20 + 20,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
+      {mounted && particles.length > 0 && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {particles.map((particle, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-white/20 rounded-full"
+              initial={{
+                x: `${particle.x}%`,
+                y: `${particle.y}%`,
+              }}
+              animate={{
+                y: [`${particle.y}%`, `${(particle.y + 50) % 100}%`],
+                opacity: [0.1, 0.3, 0.1],
+              }}
+              transition={{
+                duration: particle.duration,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
