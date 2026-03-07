@@ -26,34 +26,26 @@ export default function Navbar({ settings }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  /* ---------------- RESET ON ROUTE CHANGE ---------------- */
+  useEffect(() => {
+    setScrolled(false);
+    setMenuOpen(false);
+  }, [pathname]);
+
   /* ---------------- SCROLL EFFECT ---------------- */
   useEffect(() => {
-    if (!shouldBlend) return;
+    if (!(isHome || isContact || isAbout || isGallery || isTripDetail)) return;
 
-    const checkScroll = () => {
+    const onScroll = () => {
       setScrolled(window.scrollY > 40);
     };
 
-    // run immediately
-    checkScroll();
-
-    // run again after layout paint (fixes hero + navbar timing)
-    requestAnimationFrame(checkScroll);
-
-    window.addEventListener("scroll", checkScroll, { passive: true });
-
-    return () => window.removeEventListener("scroll", checkScroll);
-  }, [shouldBlend]);
-
-  /* ---------------- RESET ON ROUTE CHANGE ---------------- */
-  useEffect(() => {
-    if (shouldBlend) {
-      setScrolled(window.scrollY > 40);
-    }
-    setMenuOpen(false);
-  }, [pathname, shouldBlend]);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome, isContact, isAbout, isGallery, isTripDetail]);
 
   /* ---------------- SECTION NAVIGATION ---------------- */
+
   const goToSection = (id: string) => {
     setMenuOpen(false);
 
@@ -86,6 +78,13 @@ export default function Navbar({ settings }: NavbarProps) {
   };
 
   /* ---------------- NAVBAR CLASSES ---------------- */
+  const navbarClass =
+    isHome || isContact || isAbout || isGallery || isTripDetail
+      ? scrolled
+        ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10"
+        : "bg-gradient-to-b from-black/60 to-transparent"
+      : "bg-[#0B0F14] border-b border-white/10";
+
   const navItemClass =
     "relative cursor-pointer text-white/80 hover:text-white transition " +
     "after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-0 " +
@@ -93,13 +92,8 @@ export default function Navbar({ settings }: NavbarProps) {
     "hover:after:w-full";
 
   return (
-    <header
-      className={`
-    fixed top-0 z-[100] w-full transition-all duration-500 ease-out
-    ${!shouldBlend ? "bg-[#0B0F14] border-b border-white/10" : ""}
-    ${shouldBlend && scrolled ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10" : ""}
-    ${shouldBlend && !scrolled ? "bg-transparent" : ""}
-  `}
+     <header
+      className={`fixed top-0 z-[100] w-full transition-all duration-500 ease-out ${navbarClass}`}
     >
       {/* ================= DESKTOP NAV ================= */}
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
