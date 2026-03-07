@@ -95,19 +95,11 @@ export default function Navbar({ settings }: NavbarProps) {
   return (
     <header
       className={`
-        fixed top-0 z-[100] w-full transition-all duration-500 ease-out
-        ${!shouldBlend ? "bg-[#0B0F14] border-b border-white/10" : ""}
-        ${
-          shouldBlend && scrolled
-            ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10"
-            : ""
-        }
-        ${
-          shouldBlend && !scrolled
-            ? "bg-gradient-to-b from-black/60 to-transparent"
-            : ""
-        }
-      `}
+    fixed top-0 z-[100] w-full transition-all duration-500 ease-out
+    ${!shouldBlend ? "bg-[#0B0F14] border-b border-white/10" : ""}
+    ${shouldBlend && scrolled ? "bg-[#0B0F14]/90 backdrop-blur border-b border-white/10" : ""}
+    ${shouldBlend && !scrolled ? "bg-transparent" : ""}
+  `}
     >
       {/* ================= DESKTOP NAV ================= */}
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
