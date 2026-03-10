@@ -90,7 +90,7 @@ export default function ContactOptionsSection({ settings }: any) {
                   </div>
 
                   <p className="text-sm text-slate-500 mt-4">
-                    Available during business hours
+                    Available 24/7 to help you plan your next journey.
                   </p>
                 </motion.div>
               )
