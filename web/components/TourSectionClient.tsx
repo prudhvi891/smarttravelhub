@@ -15,7 +15,7 @@ export default function ToursSectionClient({
 }) {
   return (
     <section
-      id="tours"
+      id="trips"
       className="bg-[#F8FAFC] pt-24 pb-10 border-b border-slate-200 scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto px-6">
@@ -30,7 +30,7 @@ export default function ToursSectionClient({
             variants={fadeUp}
             className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
           >
-            Our Tours
+            Our Trips
           </motion.h2>
 
           <motion.p

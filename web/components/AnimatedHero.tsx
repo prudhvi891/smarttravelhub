@@ -144,7 +144,7 @@ export default function AnimatedHero() {
             transition={{ duration: 0.8, delay: 1.5 }}
           >
             <motion.a
-              href="#tours"
+              href="#trips"
               whileHover={{ 
                 scale: 1.03,
                 backgroundColor: "rgba(255, 255, 255, 1)",
@@ -154,7 +154,7 @@ export default function AnimatedHero() {
               className="group inline-flex items-center gap-2.5 bg-white/95 text-black px-8 py-3.5 md:px-10 md:py-4 rounded-full font-medium text-sm md:text-base tracking-wide overflow-hidden"
               style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.25)" }}
             >
-              <span className="relative z-10">Explore Tours</span>
+              <span className="relative z-10">Explore Trips</span>
               
               <motion.svg
                 className="w-4 h-4 relative z-10"

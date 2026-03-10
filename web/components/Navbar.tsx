@@ -126,9 +126,9 @@ export default function Navbar({ settings }: NavbarProps) {
           <li>
             <button
               className={navItemClass}
-              onClick={() => goToSection("tours")}
+              onClick={() => goToSection("trips")}
             >
-              Tours
+              Trips
             </button>
           </li>
 
@@ -193,9 +193,9 @@ export default function Navbar({ settings }: NavbarProps) {
           <li>
             <button
               className={navItemClass}
-              onClick={() => goToSection("tours")}
+              onClick={() => goToSection("trips")}
             >
-              Tours
+              Trips
             </button>
           </li>
 

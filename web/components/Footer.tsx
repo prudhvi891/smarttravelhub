@@ -23,7 +23,7 @@ export default function Footer({ settings }: any) {
             <h4 className="text-sm font-semibold text-white mb-3">Explore</h4>
             <ul className="space-y-2 text-sm">
               {[
-                { label: "Tours", href: "/#tours" },
+                { label: "Trips", href: "/#trips" },
                 { label: "Gallery", href: "/gallery" },
                 { label: "Reviews", href: "/#reviews" },
                 { label: "About Us", href: "/about" },
