@@ -50,7 +50,7 @@ export default async function TripDetailPage({
 
             {trip.price && (
               <span className="md:hidden text-white font-semibold text-lg">
-                Starting from ₹{trip.price}
+                Starting from ₹{trip.price.toLocaleString()}/-
               </span>
             )}
           </div>
@@ -75,7 +75,7 @@ export default async function TripDetailPage({
                 <div className="bg-black/40 p-3 rounded-lg flex items-center justify-between">
                   <p className="text-white text-sm">Starting from</p>
                   <p className="text-white font-semibold text-lg">
-                    ₹{trip.price}
+                    ₹{trip.price.toLocaleString()}/-
                   </p>
                 </div>
               ) : (
@@ -105,7 +105,7 @@ export default async function TripDetailPage({
             {trip.price ? (
               <div className="bg-black/40 p-4 rounded-lg flex items-center justify-between">
                 <p className="font-medium text-white">Starting from</p>
-                <p className="font-semibold text-white">₹{trip.price}</p>
+                <p className="font-semibold text-white">₹{trip.price.toLocaleString()}/-</p>
               </div>
             ) : (
               <p className="text-slate-400 text-sm">
