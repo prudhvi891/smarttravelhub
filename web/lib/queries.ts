@@ -8,7 +8,7 @@ export const ALL_TRIPS_QUERY = `
     duration,
     status,
     featured,
-    pricing,
+    price,
     heroImage
   }
 `;
@@ -42,7 +42,7 @@ export const TRIP_BY_SLUG_QUERY = `
     shortDescription,
     heroImage,
     gallery,
-    pricing
+    price
   }
 `;
 
@@ -59,7 +59,7 @@ export const ALL_TRIPS_LISTING_QUERY = `
   bulkSize,
   featured,
   heroImage,
-  pricing,
+  price,
   hasOffer,
   offerText
 }
@@ -72,7 +72,7 @@ export const TRIP_DETAIL_QUERY = `
   duration,
   shortDescription,
   heroImage,
-  pricing,
+  price,
   overview,
   itinerary,
   inclusions,

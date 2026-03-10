@@ -8,10 +8,6 @@ type TripCardProps = {
 };
 
 export default function TripCard({ trip }: TripCardProps) {
-  const startingPrice = trip.pricing?.length
-    ? Math.min(...trip.pricing.map((p: any) => p.price))
-    : null;
-
   return (
     <Link
       href={`/trips/${trip.slug.current}`}
@@ -52,7 +48,7 @@ export default function TripCard({ trip }: TripCardProps) {
           </span>
         )}
 
-         {trip.hasOffer && (
+        {trip.hasOffer && (
           <span className="absolute bottom-3 left-3 bg-emerald-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
             Special Offer
           </span>
@@ -81,10 +77,6 @@ export default function TripCard({ trip }: TripCardProps) {
             <p className="text-xs font-medium text-indigo-600 mb-1">
               Group Size: {trip.bulkSize}
             </p>
-          )}
-
-          {startingPrice && (
-            <p className="font-semibold">Starting at ₹{startingPrice}</p>
           )}
         </div>
       </div>
