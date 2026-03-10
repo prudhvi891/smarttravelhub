@@ -140,33 +140,12 @@ export const trip = defineType({
 
     /* ================= PRICING ================= */
 
-    defineField({
-      name: 'pricing',
-      title: 'Pricing Options',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            {
-              name: 'groupSize',
-              title: 'Group Size',
-              type: 'string',
-            },
-            {
-              name: 'price',
-              title: 'Price (per person)',
-              type: 'number',
-            },
-            {
-              name: 'note',
-              title: 'Note',
-              type: 'string',
-            },
-          ],
-        },
-      ],
-    }),
+   defineField({
+    name: "price",
+    title: "Price",
+    type: "number",
+   }),
+
 
     /* ================= SPECIAL OFFER ================= */
 
