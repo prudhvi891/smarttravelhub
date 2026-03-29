@@ -15,6 +15,14 @@ export const metadata = {
     "itinerary app",
     "travel app India",
   ],
+
+  openGraph: {
+    title: "Smart Travel Hub",
+    description: "Travel planning made easy",
+    url: "https://www.smarttravelhub.in",
+    siteName: "Smart Travel Hub",
+    type: "website",
+  },
 };
 
 export default async function RootLayout({
