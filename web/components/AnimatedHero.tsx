@@ -94,6 +94,10 @@ export default function AnimatedHero() {
         <div className="text-center mb-8 md:mb-12">
           <div className="mb-8 md:mb-12">
             <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl font-light text-white leading-[1.1] tracking-tight">
+              {/* SMALL BRAND LINE */}
+              <div className="text-sm md:text-lg tracking-[0.3em] uppercase text-white/60 mb-4">
+                Smart Travel Hub
+              </div>
               {["Explore", "The", "World", "Smarter"].map((word, i) => (
                 <div key={i} className="inline-block overflow-hidden mr-3 md:mr-4">
                   <motion.span
